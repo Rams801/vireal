@@ -14,6 +14,7 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
   const { toast } = useToast();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -45,11 +46,10 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
           data: {
             username,
             full_name: fullName,
@@ -59,10 +59,13 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast({
-        title: 'Success',
-        description: 'Check your email for the confirmation link!',
-      });
+      if (data.user) {
+        toast({
+          title: 'Welcome to Vibe On!',
+          description: 'Your account has been created successfully!',
+        });
+        window.location.href = '/';
+      }
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -74,11 +77,83 @@ const Auth = () => {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Password reset email sent',
+        description: 'Check your email for password reset instructions',
+      });
+      setResetMode(false);
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (resetMode) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-slate-800/90 border-purple-500/20">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-white">Reset Password</CardTitle>
+            <CardDescription className="text-slate-300">
+              Enter your email to receive reset instructions
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-white">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="bg-slate-700 border-slate-600 text-white"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-purple-600 hover:bg-purple-700"
+              >
+                {loading ? 'Sending...' : 'Send Reset Email'}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full text-slate-300 hover:text-white"
+                onClick={() => setResetMode(false)}
+              >
+                Back to Sign In
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-slate-800/90 border-purple-500/20">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-white">Welcome to Social</CardTitle>
+          <CardTitle className="text-2xl font-bold text-white">Welcome to Vibe On</CardTitle>
           <CardDescription className="text-slate-300">
             Connect, share, and discover amazing content
           </CardDescription>
@@ -120,6 +195,14 @@ const Auth = () => {
                   className="w-full bg-purple-600 hover:bg-purple-700"
                 >
                   {loading ? 'Signing In...' : 'Sign In'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full text-slate-300 hover:text-white"
+                  onClick={() => setResetMode(true)}
+                >
+                  Forgot Password?
                 </Button>
               </form>
             </TabsContent>

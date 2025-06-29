@@ -2,7 +2,18 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Home, Search, PlusSquare, Heart, MessageCircle, User, Film, LogOut } from 'lucide-react';
+import { 
+  Home, 
+  Search, 
+  PlusSquare, 
+  Heart, 
+  MessageCircle, 
+  User, 
+  Film, 
+  LogOut,
+  Settings,
+  BarChart3
+} from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LayoutProps {
@@ -21,7 +32,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { icon: Film, label: 'Reels', path: '/reels' },
     { icon: Heart, label: 'Notifications', path: '/notifications' },
     { icon: MessageCircle, label: 'Messages', path: '/messages' },
+    { icon: BarChart3, label: 'Dashboard', path: '/dashboard' },
     { icon: User, label: 'Profile', path: '/profile' },
+    { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 
   const handleSignOut = async () => {
@@ -33,9 +46,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="flex">
         {/* Sidebar */}
-        <div className="fixed left-0 top-0 h-full w-64 bg-slate-800/90 backdrop-blur-sm border-r border-purple-500/20 p-6">
+        <div className="fixed left-0 top-0 h-full w-64 bg-slate-800/90 backdrop-blur-sm border-r border-purple-500/20 p-6 overflow-y-auto">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-white">Social</h1>
+            <h1 className="text-2xl font-bold text-white">Vibe On</h1>
           </div>
           
           <nav className="space-y-2">
