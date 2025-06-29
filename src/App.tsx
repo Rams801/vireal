@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,10 @@ import Feed from "./components/Feed";
 import Auth from "./pages/Auth";
 import Explore from "./pages/Explore";
 import Profile from "./pages/Profile";
+import CreatePost from "./pages/CreatePost";
+import Reels from "./pages/Reels";
+import Notifications from "./pages/Notifications";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -80,30 +83,22 @@ const App = () => (
             } />
             <Route path="/create" element={
               <ProtectedRoute>
-                <div className="flex items-center justify-center min-h-screen">
-                  <div className="text-white text-xl">Create Post - Coming Soon!</div>
-                </div>
+                <CreatePost />
               </ProtectedRoute>
             } />
             <Route path="/reels" element={
               <ProtectedRoute>
-                <div className="flex items-center justify-center min-h-screen">
-                  <div className="text-white text-xl">Reels - Coming Soon!</div>
-                </div>
+                <Reels />
               </ProtectedRoute>
             } />
             <Route path="/notifications" element={
               <ProtectedRoute>
-                <div className="flex items-center justify-center min-h-screen">
-                  <div className="text-white text-xl">Notifications - Coming Soon!</div>
-                </div>
+                <Notifications />
               </ProtectedRoute>
             } />
             <Route path="/messages" element={
               <ProtectedRoute>
-                <div className="flex items-center justify-center min-h-screen">
-                  <div className="text-white text-xl">Messages - Coming Soon!</div>
-                </div>
+                <Messages />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
