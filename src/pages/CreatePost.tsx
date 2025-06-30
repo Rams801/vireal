@@ -139,12 +139,14 @@ const CreatePost = () => {
 
       // Deduct coins if boosting
       if (isBoostPost) {
-        const { error: coinError } = await supabase
-          .from('profiles')
-          .update({ coins: supabase.raw('coins - 50') })
-          .eq('id', user?.id);
+        const { error: coinError } = await supabase.rpc('update_profile_coins', {
+          user_id: user?.id,
+          amount: -50
+        });
 
-        if (coinError) throw coinError;
+        if (coinError) {
+          console.error('Error deducting coins:', coinError);
+        }
       }
 
       toast({

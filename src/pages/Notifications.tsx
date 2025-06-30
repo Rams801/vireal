@@ -42,7 +42,7 @@ const Notifications = () => {
         .from('notifications')
         .select(`
           *,
-          actor:actor_id(username, full_name, avatar_url)
+          actor:profiles!notifications_actor_id_fkey(username, full_name, avatar_url)
         `)
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false })
